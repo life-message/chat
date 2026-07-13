@@ -1,14 +1,9 @@
 @import url("variables.css");
-@import url("buttons.css");
 @import url("fonts.css");
 @import url("sections.css");
-@import url("cards.css");
-@import url("notifications.css");
-@import url("inputs.css");
 @import url("ui-enhancements.css");
-@import url("forms.css");
-@import url("menus.css");
 @import url("layout/layout.css");
+@import url("components/_init.css");
 
 * {
     padding: 0;
