@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./web:/usr/share/nginx/html
-      - ../cdn:/usr/share/nginx/html/cdn
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ../cdn:/usr/share/nginx/html/cdn:ro
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
     ports:
       - "8080:80"
