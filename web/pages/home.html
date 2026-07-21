@@ -6,24 +6,22 @@
 </head>
 
 <body>
-    <header data-template="header"></header>
     <section>
-        <div>
-            <h1 class="adaptive">Life Message</h1>
-            <h2 class="adaptive">Общение в реальном времени!</h2>
-        </div>
-        <form>
-            <input type="text" placeholder="Введите ID чата" id="chat-id">
+        <header>
             <nav>
-                <button id="install-app">
-                    <h3 class="iconoir-download-square"></h3>
-                </button>
-                <button id="open-chat" type="submit">
-                    <h3> Открыть чат</h3>
-                </button>
-                <a href="/contacts">
-                    <h3 class="iconoir-community"></h3>
-                </a>
+                <h1 class="accent"><i><img src="/static/icons/icon.svg" alt="svg"></i>lime</h1>
+                <menu>
+                    <h6><span>NAT</span></h6>
+                    <h6><span>1.0.0</span></h6>
+                    <button><span class="iconoir-settings"></span></button>
+                </menu>
+            </nav>
+            <h2 class="accent">Анонимный мессенджер</h2>
+        </header>
+        <form>
+            <nav>
+                <input type="text" placeholder="Введите ID чата" id="chat-id">
+                <button id="open-chat" class="iconoir-nav-arrow-right"></button>
             </nav>
         </form>
     </section>
@@ -34,5 +32,3 @@
         <a href="https://iconoir.com/" class="iconoir-peace-hand"><i>iconoir</i></a>
     </footer>
 </body>
-
-</html>
