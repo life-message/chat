@@ -6,14 +6,14 @@
 </head>
 
 <body>
-    <section>
+    <section data-replaced="main">
         <header>
             <nav>
                 <h1 class="accent"><i><img src="/static/icons/icon.svg" alt="svg"></i>lime</h1>
                 <menu>
                     <h6><span>NAT</span></h6>
                     <h6><span>1.0.0</span></h6>
-                    <button><span class="iconoir-settings"></span></button>
+                    <button data-replaced="profile"><span class="iconoir-settings"></span></button>
                 </menu>
             </nav>
             <h2 class="accent">Анонимный мессенджер</h2>
@@ -25,10 +25,36 @@
             </nav>
         </form>
     </section>
+    <section data-replaced="profile" hidden>
+        <button data-replaced="main" class="iconoir-plus"></button>
+        <div>
+            <section>
+                <header>
+                    <nav>
+                        <h4 data-storage="username"></h4>
+                        <button><span class="iconoir-edit-pencil"></span></button>
+                    </nav>
+                </header>
+                <main>
+                    <h3 data-storage="avatar"></h3>
+                </main>
+                <footer></footer>
+            </section>
+            <nav>
+                <button class="iconoir-fill-color" data-hue-adaptive="0"></button>
+                <button class="iconoir-fill-color" data-hue-adaptive="20"></button>
+                <button class="iconoir-fill-color" data-hue-adaptive="60"></button>
+                <button class="iconoir-fill-color" data-hue-adaptive="120"></button>
+                <button class="iconoir-fill-color" data-hue-adaptive="180"></button>
+                <button class="iconoir-fill-color" data-hue-adaptive="220"></button>
+                <button class="iconoir-fill-color" data-hue-adaptive="260"></button>
+                <button class="iconoir-fill-color" data-hue-adaptive="320"></button>
+            </nav>
+    </section>
 
 
     <footer id="custom">
-        <a href="https://github.com/falbue/Life-Message" class="iconoir-github"><i>Github</i></a>
-        <a href="https://iconoir.com/" class="iconoir-peace-hand"><i>iconoir</i></a>
+        <a href="https://github.com/life-message/chat" class="iconoir-github">Github</a>
+        <a href="https://iconoir.com/" class="iconoir-peace-hand">iconoir</a>
     </footer>
 </body>

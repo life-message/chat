@@ -1,14 +1,11 @@
-@media (prefers-color-scheme: light) {
-    :root {
-        --custom: var(--light-lavender);
-    }
-}
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --custom: var(--deep-indigo);
-    }
-
+:root {
+    --lightest: #E6EDE6;
+    --pale-rgb: 188, 226, 188;
+    --pale: rgba(var(--pale-rgb), 1);
+    --accent: #99CC99;
+    --dark-muted: #213121;
+    --dark: #1E2A1E;
+    --darkets: #152015;
 }
 
 footer#custom {
@@ -18,15 +15,12 @@ footer#custom {
     transform: translateX(-50%);
     display: flex;
     justify-content: center;
-    gap: var(--gap);
+    gap: calc(var(--gap) * 2);
 }
 
 footer#custom>a {
-    display: flex;
-    flex-direction: row;
-    gap: 5px;
-    color: var(--custom);
-    font-size: var(--h4);
+    color: var(--text-secondary);
+
 }
 
 @media (max-width: 768px) {
@@ -34,35 +28,4 @@ footer#custom>a {
         top: 10px;
         bottom: auto;
     }
-}
-
-article.avatar[menu] {
-    box-shadow: var(--shadow-bottom);
-}
-
-article.avatar[menu]>h2 {
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-
-article.avatar {
-    box-sizing: border-box;
-    padding: 20px;
-    background-color: var(--button-color);
-    gap: 20px;
-    width: 100%;
-    display: flex;
-    align-items: center;
-}
-
-article.avatar * {
-    color: var(--accent);
-}
-
-button.avatar {
-    font-size: var(--h4);
-    padding: 20px
 }
