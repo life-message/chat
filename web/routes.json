@@ -1,0 +1,9 @@
+{
+  "routes": [
+    {
+      "path": "/chat/{chatId}",
+      "page": "chat.html",
+      "seo": {}
+    }
+  ]
+}

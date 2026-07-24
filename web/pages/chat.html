@@ -7,7 +7,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
 
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
-    <script src="static/scripts/chat/webrtc.js"></script>
+    <script type="module" src="static/scripts/chat/webrtc.js"></script>
     <script type="module" src="static/scripts/ui/auto-fonts.js"></script>
     <link rel="stylesheet" href="static/css/chat.css">
 </head>
@@ -25,19 +25,18 @@
                     <h4 data-field="avatar"></h4>
                 </nav>
                 <nav>
-                    <button class="iconoir-phone"></button>
                     <button class="iconoir-menu" menu="chat-menu"></button>
                 </nav>
             </nav>
         </header>
         <div class="chat">
-            <p id="displayMessage"></p>
+            <p id="Message">Ожидание пользователей</p>
         </div>
         <div id="textarea">
             <nav class="input-area">
                 <textarea rows="1" placeholder="Сообщение" inputmode="text"></textarea>
                 <button id="reset" class="ghost">
-                    <i class="iconoir-xmark"></i>
+                    <span class="iconoir-xmark"></span>
                 </button>
             </nav>
         </div>

@@ -9,3 +9,8 @@ services:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
     ports:
       - "8080:80"
+
+  signaling:
+    extends:
+      file: ./signaling/docker-compose.yml
+      service: signaling

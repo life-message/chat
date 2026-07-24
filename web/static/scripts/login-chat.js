@@ -1,45 +1,52 @@
-function generateRandomString(length) {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
-    const array = new Uint32Array(length);
-    crypto.getRandomValues(array);
-    return Array.from(array, n => chars[n % chars.length]).join('');
+function generateRandomString(length = 32) {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
+  const array = new Uint32Array(length);
+  crypto.getRandomValues(array);
+
+  let result = '';
+  for (let i = 0; i < length; i++) {
+    result += chars[array[i] % chars.length];
+  }
+  return result;
 }
 
 (function initChatId() {
-    const tryInit = () => {
-        const input = document.getElementById("chat-id");
-        if (!input) return false;
+  const tryInit = () => {
+    const input = document.getElementById("chat-id");
+    if (!input) return false;
 
-        if (!input.value) {
-            input.placeholder = generateRandomString(64);
-        }
+    if (!input.value && input.placeholder === "Введите ID чата") {
+      input.placeholder = generateRandomString(48);
+    }
 
-        const container = input.closest('.card-list');
-        if (container) {
-            const btn = container.querySelector('#open-chat');
-            if (btn && !btn.dataset.handlerAttached) {
-                btn.addEventListener('click', () => {
-                    let chatId = input.value.trim();
-                    if (!chatId) chatId = input.placeholder;
+    const btn = document.querySelector('#open-chat');
+    if (!btn || btn.dataset.handlerAttached) return true;
 
-                    if (chatId) {
-                        window.location.href = `/chat.html#${chatId}`;
-                    }
-                });
-                btn.dataset.handlerAttached = "true";
-            }
-        }
-
-        return true;
+    const openChat = () => {
+      const chatId = input.value.trim() || input.placeholder;
+      location.href = `/chat/${encodeURIComponent(chatId)}`;
     };
 
-    if (tryInit()) return;
+    btn.addEventListener('click', openChat);
 
-    const observer = new MutationObserver(() => {
-        if (tryInit()) {
-            observer.disconnect();
-        }
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        openChat();
+      }
     });
 
-    observer.observe(document.documentElement, { childList: true, subtree: true });
+    btn.dataset.handlerAttached = "true";
+    return true;
+  };
+
+  if (tryInit()) return;
+
+  const observer = new MutationObserver((mutations, obs) => {
+    if (tryInit()) {
+      obs.disconnect();
+    }
+  });
+
+  observer.observe(document.body, { childList: true, subtree: true });
 })();

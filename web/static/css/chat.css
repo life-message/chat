@@ -1,5 +1,10 @@
+:root {
+    color-scheme: light dark;
+    --chat-background-color: light-dark(var(--pale), var(--dark));
+}
+
 body {
-    background-color: var(--border-color) !important;
+    background-color: var(--chat-background-color) !important;
     padding: 0 !important;
 }
 
@@ -44,8 +49,10 @@ main>header * {
     overflow-wrap: anywhere;
 }
 
-#displayMessage {
+#Message p {
+    transition: 0.3s ease-out;
     color: var(--accent);
+    font-size: clamp(1.25rem, 2vw, 10rem);
 }
 
 #textarea {
@@ -53,9 +60,8 @@ main>header * {
     display: flex;
     flex-direction: column;
     gap: 8px;
-    background-color: var(--background);
+    background-color: var(--background-color);
     border-radius: var(--border-radius);
-    background-color: var(--background);
     box-shadow: var(--shadow-bottom);
     margin: 12px 12px 16px 12px;
 }
