@@ -23,10 +23,10 @@
                 <input type="text" placeholder="Введите ID чата" id="chat-id">
                 <button id="open-chat" class="iconoir-nav-arrow-right"></button>
             </nav>
-            <button data-replaced="contacts" data-line="down">Контакты</button>
+            <button type="button" data-replaced="contacts swipe-down" data-line="down">Контакты</button>
         </form>
     </section>
-    <section data-replaced="profile" hidden>
+    <section data-replaced="profile">
         <nav>
             <button data-replaced="main swipe-right" data-line="left">Назад</button>
             <div>
@@ -54,6 +54,22 @@
                 </nav>
             </div>
         </nav>
+    </section>
+    <section data-replaced="contacts">
+        <form>
+            <nav>
+                <input type="text" placeholder="Поиск:" name="find-contacts">
+                <button class="iconoir-plus"></button>
+            </nav>
+            <button type="button" data-replaced="main swipe-up" data-line="up">чат</button>
+        </form>
+        <section>
+            <header></header>
+            <main>
+                <h3>Контакты пока в разработке</h3>
+            </main>
+            <footer></footer>
+        </section>
     </section>
 
 

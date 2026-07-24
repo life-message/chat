@@ -28,4 +28,10 @@ footer#custom>a {
         top: 10px;
         bottom: auto;
     }
+
+    section[data-replaced="main"] {
+        height: 100dvh;
+        justify-content: space-between;
+    }
+
 }
