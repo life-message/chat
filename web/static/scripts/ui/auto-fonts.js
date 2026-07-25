@@ -47,6 +47,6 @@ SPA((el) => {
   adjustFontSize(el);
   startTextWatcher(el);
 }, {
-  id: "Message",
+  id: "message-text",
   continuous: true
 });

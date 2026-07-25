@@ -46,8 +46,6 @@ main>header * {
 
 #message p {
     transition: 0.3s ease-out;
-
-    font-size: clamp(1.25rem, 2vw, 10rem);
 }
 
 #textarea {
