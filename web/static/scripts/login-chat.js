@@ -24,7 +24,10 @@ function generateRandomString(length = 32) {
 
     const openChat = () => {
       const chatId = input.value.trim() || input.placeholder;
-      location.href = `/chat/${encodeURIComponent(chatId)}`;
+
+      if (typeof window.page === 'function') {
+        window.page(`/chat/${encodeURIComponent(chatId)}`);
+      }
     };
 
     btn.addEventListener('click', openChat);
