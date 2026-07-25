@@ -1,5 +1,5 @@
 services:
-  static-app:
+  app:
     image: nginx:alpine
     container_name: static-app
     restart: unless-stopped
