@@ -6,47 +6,60 @@ export class ChatUI {
     this.resetBtn = document.getElementById('reset');
     this.emptyState = document.getElementById('users-none');
     this.userListEl = document.getElementById('users-list');
+    this.chatTitle = document.getElementById('chat-title');
     this.users = usersManager;
+  }
+
+  updateChatTitle(title) {
+    if (this.chatTitle) this.chatTitle.textContent = title;
   }
 
   displayDiv(hidden = false) {
     if (hidden) {
-      console.log("Скрыть всё");
-      this.emptyState.hidden = true;  // ← исправлено
+      this.emptyState.hidden = true;
       this.userListEl.hidden = true;
       return;
     }
 
-    const users = this.users.getList();
-    console.log(users);
+    const usersObj = this.users.getList();
+    const userKeys = Object.keys(usersObj);
 
-    if (!hidden && users.length > 0) {
-      this.renderUsers();
+    if (userKeys.length > 0) {
+      this.renderUsers(userKeys);
       this.userListEl.hidden = false;
       this.emptyState.hidden = true;
     } else {
       this.userListEl.hidden = true;
       this.emptyState.hidden = false;
     }
+    if (userKeys.length >= 2) {
+      this.updateChatTitle("Группа");
+    }
+    if (userKeys.length === 1) {
+      this.updateChatTitle(usersObj[userKeys[0]].username);
+    }
   }
 
   updateMessage(text = '', msg) {
     const hasText = text.trim().length > 0;
     if (msg.text === "") {
-      this.message.textContent = ''
+      this.message.textContent = '';
       this.displayDiv(false);
-    }
-    else {
+    } else {
       this.message.textContent = text;
       this.displayDiv(true);
     }
   }
 
-  renderUsers() {
+  renderUsers(keys) {
     if (!this.userListEl) return;
-    this.userListEl.innerHTML = this.users.getList().map(u =>
-      `<h4><span>${u.avatar ?? ''}</span> <span>${u.username ?? ''}</span></h4>`
-    ).join('');
+
+    const usersObj = this.users.getList();
+
+    this.userListEl.innerHTML = keys.map(uid => {
+      const u = usersObj[uid]; // Достаем пользователя по ключу
+      return `<h4><span>${u.avatar ?? ''}</span> <span>${u.username ?? ''}</span></h4>`;
+    }).join('');
   }
 
   onInput(cb) { this.textarea?.addEventListener('input', cb); }
