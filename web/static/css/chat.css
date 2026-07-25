@@ -17,26 +17,7 @@ main>header * {
     color: var(--accent) !important;
 }
 
-::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background: var(--border-color);
-    border-radius: var(--border-radius);
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--border);
-    border-radius: var(--br);
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: var(--border-color);
-}
-
-.chat {
+#message {
     flex: 1;
     min-height: 0;
     overflow-y: auto;
@@ -49,9 +30,23 @@ main>header * {
     overflow-wrap: anywhere;
 }
 
-#Message p {
-    transition: 0.3s ease-out;
+#message>div {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap);
+}
+
+#message>div>* {
     color: var(--accent);
+}
+
+#message>div button {
+    width: 100%;
+}
+
+#message p {
+    transition: 0.3s ease-out;
+
     font-size: clamp(1.25rem, 2vw, 10rem);
 }
 

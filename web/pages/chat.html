@@ -7,7 +7,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
 
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
-    <script type="module" src="static/scripts/chat/webrtc.js"></script>
+    <script type="module" src="static/scripts/chat/chat.js"></script>
     <script type="module" src="static/scripts/ui/auto-fonts.js"></script>
     <link rel="stylesheet" href="static/css/chat.css">
 </head>
@@ -16,22 +16,21 @@
     <main>
         <header>
             <nav>
-                <a href="/">
-                    <i>
-                        <h4 class="iconoir-arrow-left"></h4>
-                    </i>
-                </a>
-                <nav id="users-list">
-                    <h4 data-field="avatar"></h4>
-                </nav>
+                <h4 data-storage="avatar"></h4>
                 <nav>
                     <button class="iconoir-menu" menu="chat-menu"></button>
                 </nav>
             </nav>
         </header>
-        <div class="chat">
-            <p id="Message">Ожидание пользователей</p>
-        </div>
+        <section id="message">
+            <div id="users-none" hidden>
+                <h3>В чате никого нет</h3>
+                <button class="iconoir-share-android">Пригласить</button>
+            </div>
+            <div id="users-list" hidden>
+            </div>
+            <p></p>
+        </section>
         <div id="textarea">
             <nav class="input-area">
                 <textarea rows="1" placeholder="Сообщение" inputmode="text"></textarea>
