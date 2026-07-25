@@ -2,30 +2,30 @@ let deferredPrompt;
 const installBtn = document.getElementById('install-app');
 
 if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone) {
-    installBtn.classList.add('hidden');
+  installBtn.hidden = true;
 }
 
 window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    deferredPrompt = e;
-    installBtn.classList.remove('hidden');
+  e.preventDefault();
+  deferredPrompt = e;
+  installBtn.hidden = false;
 });
 
 installBtn.addEventListener('click', async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
+  if (!deferredPrompt) return;
+  deferredPrompt.prompt();
 
-    const { outcome } = await deferredPrompt.userChoice;
-    console.log(`Результат установки: ${outcome}`);
+  const { outcome } = await deferredPrompt.userChoice;
+  console.log(`Результат установки: ${outcome}`);
 
-    deferredPrompt = null;
+  deferredPrompt = null;
 
-    if (outcome === 'accepted') {
-        installBtn.classList.add('hidden');
-    }
+  if (outcome === 'accepted') {
+    installBtn.hidden = true;
+  }
 });
 
 window.addEventListener('appinstalled', () => {
-    installBtn.classList.add('hidden');
-    deferredPrompt = null;
+  installBtn.hidden = true;
+  deferredPrompt = null;
 });
