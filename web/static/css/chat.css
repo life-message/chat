@@ -1,6 +1,11 @@
 :root {
     color-scheme: light dark;
     --chat-background-color: light-dark(var(--pale), var(--dark));
+    --notification-top: 20px;
+    --notification-right: auto;
+    --notification-left: 50%;
+    --notification-transform: translateX(-50%);
+    --notification-transform-animation: translateY(-20%);
 }
 
 body {
