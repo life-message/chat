@@ -1,4 +1,4 @@
-const URL = 'https://api.falbue.ru';
+const URL = "https://api.falbue.ru";
 
 async function getServer() {
   try {
@@ -6,15 +6,14 @@ async function getServer() {
 
     if (!response.ok) {
       console.log(`Ошибка при получении серверов: ${response.status}`);
-      return { address: '127.0.0.1', port: 3000 };
+      return { address: "127.0.0.1", port: 3000 };
     }
 
     const servers = await response.json();
     return servers[0];
-
   } catch (error) {
-    console.warn('Не удалось подключиться к серверу, используем локальный адрес:', error.message);
-    return { address: '127.0.0.1', port: 3000 };
+    console.warn("Не удалось подключиться к серверу, используем локальный адрес:", error.message);
+    return { address: "127.0.0.1", port: 3000 };
   }
 }
 
@@ -26,15 +25,13 @@ export class ChatWebSocket {
     this.handlers = new Map();
   }
 
-
-
   async connect() {
     const server = await getServer();
-    const wsUrl = `ws://${server.address}:${server.port}/ws/${this.roomId}`;
+    const wsUrl = `wss://${server.address}:${server.port}/ws/${this.roomId}`;
     this.ws = new WebSocket(wsUrl);
 
     this.ws.onopen = () => {
-      this.send({ ...this.userData, type: 'users/join' });
+      this.send({ ...this.userData, type: "users/join" });
     };
 
     this.ws.onmessage = (event) => {
@@ -42,7 +39,7 @@ export class ChatWebSocket {
         const msg = JSON.parse(event.data);
         this.handleMessage(msg);
       } catch (error) {
-        console.error('Ошибка разбора сообщения WebSocket:', error);
+        console.error("Ошибка разбора сообщения WebSocket:", error);
       }
     };
 
@@ -59,12 +56,12 @@ export class ChatWebSocket {
 
   handleMessage(msg) {
     const handlers = this.handlers.get(msg.type) || [];
-    handlers.forEach(handler => handler(msg));
+    handlers.forEach((handler) => handler(msg));
 
     // Для неизвестных типов
     if (msg.username !== undefined && msg.text !== undefined) {
-      const defaultHandlers = this.handlers.get('message') || [];
-      defaultHandlers.forEach(handler => handler(msg));
+      const defaultHandlers = this.handlers.get("message") || [];
+      defaultHandlers.forEach((handler) => handler(msg));
     }
   }
 
