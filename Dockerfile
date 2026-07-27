@@ -1,11 +1,9 @@
-FROM node:20-alpine
+FROM nginx:alpine
 
-WORKDIR /app
+COPY ./web /usr/share/nginx/html
 
-RUN npm install ws
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
-COPY signaling/server.js .
+EXPOSE 80
 
-EXPOSE 8080
-
-CMD ["node", "server.js"]
+CMD ["nginx", "-g", "daemon off;"]
