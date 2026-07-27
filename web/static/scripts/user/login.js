@@ -1,27 +1,30 @@
-import { AVATARS } from './avatars.js';
+import { getKaomoji } from './kaomoji.js';
 
-function getRandomAvatar() {
-    const randomIndex = Math.floor(Math.random() * AVATARS.length);
-    return AVATARS[randomIndex];
+async function getRandomKaomoji() {
+  const kaomoji = await getKaomoji();
+  const randomIndex = Math.floor(Math.random() * kaomoji.length);
+  return kaomoji[randomIndex];
 }
 
 function generateUID() {
-    return 'uid_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+  return 'uid_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
 }
 
-function checkAndInitializeLocalStorage() {
-    if (!localStorage.getItem('uid')) {
-        localStorage.setItem('uid', generateUID());
-    }
+async function checkAndInitializeLocalStorage() {
+  if (!localStorage.getItem('uid')) {
+    localStorage.setItem('uid', generateUID());
+  }
 
-    const currentAvatar = localStorage.getItem('avatar');
-    if (!currentAvatar || currentAvatar.trim() === '') {
-        localStorage.setItem('avatar', getRandomAvatar());
-    }
+  const currentKaomoji = localStorage.getItem('kaomoji');
+  if (!currentKaomoji || currentKaomoji.trim() === '') {
+    localStorage.setItem('kaomoji', await getRandomKaomoji());
+  }
 
-    if (!localStorage.getItem('username')) {
-        localStorage.setItem('username', 'Гость');
-    }
+  if (!localStorage.getItem('username')) {
+    const response = await fetch("https://random-word-api.herokuapp.com/word");
+    const data = await response.json();
+    localStorage.setItem('username', data[0]);
+  }
 }
 
-checkAndInitializeLocalStorage();
+await checkAndInitializeLocalStorage();
