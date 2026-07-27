@@ -3,16 +3,14 @@ const URL = "https://api.falbue.ru";
 async function getServer() {
   try {
     const response = await fetch(`${URL}/servers/`);
-
     if (!response.ok) {
       console.log(`Ошибка при получении серверов: ${response.status}`);
       return { address: "127.0.0.1", port: 3000 };
     }
-
     const servers = await response.json();
     return servers[0];
   } catch (error) {
-    console.warn("Не удалось подключиться к серверу, используем локальный адрес:", error.message);
+    console.warn("Не удалось подключиться к серверу:", error.message);
     return { address: "127.0.0.1", port: 3000 };
   }
 }
@@ -23,24 +21,43 @@ export class ChatWebSocket {
     this.userData = userData;
     this.ws = null;
     this.handlers = new Map();
+    this.destroyed = false;
   }
 
   async connect() {
     const server = await getServer();
+    if (this.destroyed) {
+      console.log("ChatWebSocket: connect отменён, объект уже уничтожен");
+      return this;
+    }
+
     const wsUrl = `wss://${server.address}:${server.port}/ws/${this.roomId}`;
     this.ws = new WebSocket(wsUrl);
 
     this.ws.onopen = () => {
+      if (this.destroyed) {
+        this.ws.close();
+        return;
+      }
       this.send({ ...this.userData, type: "users/join" });
     };
 
     this.ws.onmessage = (event) => {
+      if (this.destroyed) return;
       try {
         const msg = JSON.parse(event.data);
         this.handleMessage(msg);
       } catch (error) {
         console.error("Ошибка разбора сообщения WebSocket:", error);
       }
+    };
+
+    this.ws.onclose = () => {
+      this.ws = null;
+    };
+
+    this.ws.onerror = (err) => {
+      console.error("WebSocket ошибка:", err);
     };
 
     return this;
@@ -58,21 +75,36 @@ export class ChatWebSocket {
     const handlers = this.handlers.get(msg.type) || [];
     handlers.forEach((handler) => handler(msg));
 
-    // Для неизвестных типов
-    if (msg.username !== undefined && msg.text !== undefined) {
+    if (
+      msg.username !== undefined &&
+      msg.text !== undefined &&
+      !this.handlers.has(msg.type)
+    ) {
       const defaultHandlers = this.handlers.get("message") || [];
       defaultHandlers.forEach((handler) => handler(msg));
     }
   }
 
   send(data) {
+    if (this.destroyed) return;
     if (this.ws?.readyState === WebSocket.OPEN) {
       this.ws.send(JSON.stringify(data));
     }
   }
 
   close() {
-    this.ws?.close();
+    this.destroyed = true;
+
+    if (this.ws) {
+      this.ws.onopen = null;
+      this.ws.onmessage = null;
+      this.ws.onclose = null;
+      this.ws.onerror = null;
+      this.ws.close();
+      this.ws = null;
+    }
+
+    this.handlers.clear();
   }
 
   get readyState() {

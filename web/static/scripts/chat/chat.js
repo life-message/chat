@@ -3,7 +3,17 @@ import { ChatUI } from "./ui.js";
 import { UsersManager } from "./users.js";
 import { SPA } from "https://cdn.jsdelivr.net/gh/live-message/cdn@0.3.0/js/utils/spa.js";
 
-export function initChat() {
+let currentChat = null;
+
+function cleanupChat() {
+  if (currentChat) {
+    currentChat.close();
+    currentChat.ui.clearTextarea?.();
+    currentChat = null;
+  }
+}
+
+function initChat() {
   const match = window.location.pathname.match(/\/chat\/([^/?]+)/);
   const roomId = match ? match[1] : null;
 
@@ -31,7 +41,7 @@ export function initChat() {
     .on("users/join", (msg) => {
       usersManager.add(msg);
       ui.displayDiv();
-      notification(`${msg.username} подключился`)
+      notification(`${msg.username} подключился`);
       ws.send({ ...getCurrentUserData(), type: "users/welcome" });
     })
     .on("users/exit", (msg) => {
@@ -66,18 +76,8 @@ export function initChat() {
   };
 }
 
-let currentChat = null;
-
-function cleanupChat() {
-  if (currentChat) {
-    currentChat.close();
-    currentChat.ui.clearTextarea?.();
-    currentChat = null;
-  }
-}
-
 SPA(
-  (element) => {
+  () => {
     cleanupChat();
     currentChat = initChat();
   },
@@ -86,5 +86,3 @@ SPA(
     continuous: true,
   },
 );
-
-window.addEventListener("spa:navigate", cleanupChat);
