@@ -1,7 +1,7 @@
-import { ChatWebSocket } from './websocket.js';
-import { ChatUI } from './ui.js';
-import { UsersManager } from './users.js';
-import { SPA } from '/cdn/js/utils/spa.js';
+import { ChatWebSocket } from "./websocket.js";
+import { ChatUI } from "./ui.js";
+import { UsersManager } from "./users.js";
+import { SPA } from "https://cdn.jsdelivr.net/gh/live-message/cdn@0.3.0/js/utils/spa.js";
 
 export function initChat() {
   const match = window.location.pathname.match(/\/chat\/([^/?]+)/);
@@ -11,9 +11,9 @@ export function initChat() {
 
   function getCurrentUserData() {
     return {
-      avatar: localStorage.getItem('avatar'),
-      uid: localStorage.getItem('uid'),
-      username: localStorage.getItem('username')
+      avatar: localStorage.getItem("avatar"),
+      uid: localStorage.getItem("uid"),
+      username: localStorage.getItem("username"),
     };
   }
 
@@ -29,35 +29,34 @@ export function initChat() {
     window.UsersManager.init(userData);
   }
 
-  ws
-    .on('users/welcome', (msg) => {
-      usersManager.add(msg);
-      ui.displayDiv();
-    })
-    .on('users/join', (msg) => {
+  ws.on("users/welcome", (msg) => {
+    usersManager.add(msg);
+    ui.displayDiv();
+  })
+    .on("users/join", (msg) => {
       usersManager.add(msg);
       ui.updateMessage(`${msg.username} подключился`, msg);
-      ws.send({ ...getCurrentUserData(), type: 'users/welcome' });
+      ws.send({ ...getCurrentUserData(), type: "users/welcome" });
     })
-    .on('users/exit', (msg) => {
+    .on("users/exit", (msg) => {
       if (msg.uid) {
         usersManager.remove(msg.uid);
       }
       ui.updateMessage(`${msg.username} отключился`, msg);
     })
-    .on('message', (msg) => {
+    .on("message", (msg) => {
       usersManager.update(msg);
       ui.updateMessage(`${msg.username}: ${msg.text}`, msg);
     });
 
   ui.onInput(() => {
-    const text = ui.textarea?.value || '';
+    const text = ui.textarea?.value || "";
     ws.send({ ...getCurrentUserData(), text });
   });
 
   ui.onReset(() => {
     ui.clearTextarea();
-    ws.send({ ...getCurrentUserData(), text: '' });
+    ws.send({ ...getCurrentUserData(), text: "" });
   });
 
   // Подключаемся
@@ -67,7 +66,7 @@ export function initChat() {
     close: () => ws.close(),
     ws,
     ui,
-    usersManager
+    usersManager,
   };
 }
 
@@ -80,12 +79,15 @@ function cleanupChat() {
   }
 }
 
-SPA((element) => {
-  cleanupChat();
-  currentChat = initChat();
-}, {
-  id: 'message',
-  continuous: true
-});
+SPA(
+  (element) => {
+    cleanupChat();
+    currentChat = initChat();
+  },
+  {
+    id: "message",
+    continuous: true,
+  },
+);
 
-window.addEventListener('spa:navigate', cleanupChat);
+window.addEventListener("spa:navigate", cleanupChat);

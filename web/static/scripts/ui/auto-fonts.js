@@ -1,4 +1,4 @@
-import { SPA } from '/cdn/js/utils/spa.js';
+import { SPA } from "https://cdn.jsdelivr.net/gh/live-message/cdn@0.3.0/js/utils/spa.js";
 
 function adjustFontSize(element) {
   if (!element) return;
@@ -35,7 +35,7 @@ function startTextWatcher(element) {
   observer.observe(element, {
     childList: true,
     characterData: true,
-    subtree: true
+    subtree: true,
   });
 
   element.__textWatcherActive = true;
@@ -43,10 +43,13 @@ function startTextWatcher(element) {
   element.__textObserver = observer;
 }
 
-SPA((el) => {
-  adjustFontSize(el);
-  startTextWatcher(el);
-}, {
-  id: "message-text",
-  continuous: true
-});
+SPA(
+  (el) => {
+    adjustFontSize(el);
+    startTextWatcher(el);
+  },
+  {
+    id: "message-text",
+    continuous: true,
+  },
+);
