@@ -35,16 +35,19 @@ function initChat() {
   ui.displayDiv();
 
   ws.on("users/welcome", (msg) => {
+    if (msg.uid === userData.uid) return;
     usersManager.add(msg);
     ui.displayDiv();
   })
     .on("users/join", (msg) => {
+      if (msg.uid === userData.uid) return;
       usersManager.add(msg);
       ui.displayDiv();
       notification(`${msg.username} подключился`);
       ws.send({ ...getCurrentUserData(), type: "users/welcome" });
     })
     .on("users/exit", (msg) => {
+      if (msg.uid === userData.uid) return;
       if (msg.uid) {
         usersManager.remove(msg.uid);
       }

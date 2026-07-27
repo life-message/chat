@@ -5,9 +5,9 @@ export class UsersManager {
 
   add(user) { if (user.uid) this.users.set(user.uid, user); }
   update(user) { if (this.users.has(user.uid)) this.users.set(user.uid, user); }
-  remove(id) { this.users.delete(id); }
+  remove(uid) { this.users.delete(uid); }
   clear() { this.users.clear(); }
   getList() { return Object.fromEntries(this.users); }
-  get(id) { const u = this.users.get(id); return u ? { [id]: u } : {}; }
+  get(uid) { return this.users.get(uid); }
   toJSON() { return Object.fromEntries(this.users); }
 }
