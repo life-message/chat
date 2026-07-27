@@ -1,3 +1,23 @@
+const URL = 'https://live-message.falbue.ru';
+
+async function getServer() {
+  try {
+    const response = await fetch(`${URL}/api/servers/`);
+
+    if (!response.ok) {
+      console.log(`Ошибка при получении серверов: ${response.status}`);
+      return { address: '127.0.0.1', port: 3000 };
+    }
+
+    const servers = await response.json();
+    return servers[0];
+
+  } catch (error) {
+    console.warn('Не удалось подключиться к серверу, используем локальный адрес:', error.message);
+    return { address: '127.0.0.1', port: 3000 };
+  }
+}
+
 export class ChatWebSocket {
   constructor(roomId, userData) {
     this.roomId = roomId;
@@ -6,8 +26,11 @@ export class ChatWebSocket {
     this.handlers = new Map();
   }
 
-  connect() {
-    const wsUrl = `ws://127.0.0.1:3000/ws/${this.roomId}`;
+
+
+  async connect() {
+    const server = await getServer();
+    const wsUrl = `ws://${server.address}:${server.port}/ws/${this.roomId}`;
     this.ws = new WebSocket(wsUrl);
 
     this.ws.onopen = () => {
