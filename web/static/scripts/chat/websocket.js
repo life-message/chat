@@ -1,8 +1,8 @@
-const URL = 'https://live-message.falbue.ru';
+const URL = 'https://api.falbue.ru';
 
 async function getServer() {
   try {
-    const response = await fetch(`${URL}/api/servers/`);
+    const response = await fetch(`${URL}/servers/`);
 
     if (!response.ok) {
       console.log(`Ошибка при получении серверов: ${response.status}`);
