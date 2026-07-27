@@ -19,15 +19,10 @@ export function initChat() {
 
   const userData = getCurrentUserData();
 
-  // Создаём экземпляры
   const ws = new ChatWebSocket(roomId, userData);
-  const usersManager = window.UsersManager || new UsersManager();
+  const usersManager = new UsersManager();
   const ui = new ChatUI(usersManager);
   ui.displayDiv();
-
-  if (window.UsersManager) {
-    window.UsersManager.init(userData);
-  }
 
   ws.on("users/welcome", (msg) => {
     usersManager.add(msg);
@@ -35,14 +30,16 @@ export function initChat() {
   })
     .on("users/join", (msg) => {
       usersManager.add(msg);
-      ui.updateMessage(`${msg.username} подключился`, msg);
+      ui.displayDiv();
+      notification(`${msg.username} подключился`)
       ws.send({ ...getCurrentUserData(), type: "users/welcome" });
     })
     .on("users/exit", (msg) => {
       if (msg.uid) {
         usersManager.remove(msg.uid);
       }
-      ui.updateMessage(`${msg.username} отключился`, msg);
+      ui.displayDiv();
+      notification(`${msg.username} отключился`);
     })
     .on("message", (msg) => {
       usersManager.update(msg);
@@ -59,7 +56,6 @@ export function initChat() {
     ws.send({ ...getCurrentUserData(), text: "" });
   });
 
-  // Подключаемся
   ws.connect();
 
   return {
@@ -75,6 +71,7 @@ let currentChat = null;
 function cleanupChat() {
   if (currentChat) {
     currentChat.close();
+    currentChat.ui.clearTextarea?.();
     currentChat = null;
   }
 }
