@@ -62,8 +62,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.actor }}/signaling:${{ needs.check-tags.outputs.tag }}
-            ghcr.io/${{ github.actor }}/signaling:latest
+            ghcr.io/${{ github.repository }}:${{ needs.check-tags.outputs.tag }}
+            ghcr.io/${{ github.repository }}:latest
 
   create-release:
     runs-on: ubuntu-latest
