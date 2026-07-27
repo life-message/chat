@@ -1,5 +1,5 @@
 import { getKaomoji } from './kaomoji.js';
-import { SPA } from "https://cdn.jsdelivr.net/gh/live-message/cdn@0.3.0/js/utils/spa.js";
+import { SPA } from "https://cdn.jsdelivr.net/gh/live-message/cdn@0.3.1/js/utils/spa.js";
 
 const kaomoji = await getKaomoji()
 
