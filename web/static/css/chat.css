@@ -54,6 +54,8 @@ main>header * {
     display: flex;
     flex-direction: column;
     gap: var(--gap);
+    align-items: center;
+    justify-content: center;
 }
 
 #message>div>* {
@@ -84,6 +86,10 @@ main>header * {
     bottom: 16px;
     left: 12px;
     right: 12px;
+    margin-left: auto;
+    margin-right: auto;
+
+    max-width: var(--max-width);
     backdrop-filter: blur(2px);
     -webkit-backdrop-filter: blur(2px);
 }
