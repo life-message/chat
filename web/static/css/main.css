@@ -8,6 +8,10 @@
     --darkets: #152015;
 }
 
+.kaomoji {
+    font-family: "Segoe UI Emoji", "Segoe UI Symbol", "Apple Color Emoji", "Twemoji Mozilla", "Noto Color Emoji", "MS Gothic", "Meiryo", sans-serif;
+}
+
 h1 {
     line-height: 1;
     margin: 0;
@@ -25,10 +29,11 @@ h1>i {
 }
 
 h1>i>svg {
-    width: 0.6em;
+    width: auto;
     height: 0.6em;
     fill: currentColor;
     display: block;
+    padding: 0 4px;
 }
 
 footer#custom {
@@ -66,4 +71,18 @@ footer#custom>a {
         justify-content: space-between;
     }
 
+}
+
+dialog[data-menu-name="edit-profile"]>section>section {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--gap);
+
+}
+
+dialog[data-menu-name="edit-profile"]>section>section>button {
+    flex: 1;
+    white-space: nowrap;
 }

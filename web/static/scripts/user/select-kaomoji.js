@@ -51,6 +51,25 @@ function createClickHandlerResult(selectedKaomoji, activeButtons, clickedButton)
 
 function init() {
   const selector = createKaomojiSelector(kaomoji, localStorage.getItem('kaomoji'));
+
+  selector.addEventListener('click', (event) => {
+    const selected = findSelectedKaomoji(event, selector);
+    if (!selected) return;
+
+    const activeButtons = getActiveKaomojiButtons(selector);
+    const result = createClickHandlerResult(
+      selected.kaomoji,
+      activeButtons,
+      selected.button
+    );
+
+    result.uiUpdates.removeActiveFrom.forEach(btn => btn.classList.remove('active'));
+    result.uiUpdates.addActiveTo.classList.add('active');
+
+    if (result.shouldUpdateStorage) {
+      localStorage.setItem('kaomoji', selected.kaomoji);
+    }
+  });
 }
 
 SPA(init, {

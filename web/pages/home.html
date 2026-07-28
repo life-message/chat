@@ -4,13 +4,24 @@
     <script src="static/scripts/login-chat.js"></script>
     <script src="static/scripts/install-app.js" defer></script>
     <script type="module" src="static/scripts/user/select-kaomoji.js" defer></script>
+    <script type="module" src="static/scripts/ui/logos.js" defer></script>
 </head>
 
 <body>
     <section data-replaced="main">
         <header>
-            <nav>
-                <h1 class="accent">lim<i><img src="/static/icons/icon.svg" alt="svg"></i></h1>
+            <nav id="logos">
+                <h1 hidden class="accent" data-color="lime">lim<i><img src="/static/icons/icon.svg" alt="svg"></i></h1>
+                <h1 hidden class="accent" data-color="blueberry">blueb<i><img src="/static/icons/blueberries.svg"
+                            alt="svg"></i>rry</h1>
+                <h1 hidden class="accent" data-color="grape">gr<i><img src="/static/icons/grape.svg" alt="svg"></i>pe
+                </h1>
+                <h1 hidden class="accent" data-color="tomato">t<i><img src="/static/icons/tomato.svg" alt="svg"></i>mato
+                </h1>
+                <h1 hidden class="accent" data-color="carrot">carro<i><img src="/static/icons/carrot.svg" alt="svg"></i>
+                </h1>
+                <h1 hidden class="accent" data-color="lemon">lem<i><img src="/static/icons/lemon.svg" alt="svg"></i>n
+                </h1>
                 <menu>
                     <h6><span>NAT</span></h6>
                     <h6><span>1.0.0</span></h6>
@@ -19,7 +30,7 @@
             </nav>
             <div>
                 <h2 class="accent">Анонимный мессенджер</h2>
-                <button id="install-app" class="iconoir-download-square">Установить приложение</button>
+                <!--<button id="install-app" class="iconoir-download-square">Установить приложение</button>-->
             </div>
         </header>
         <form id="chat-form">
@@ -27,7 +38,7 @@
                 <input type="text" placeholder="Введите ID чата" id="chat-id">
                 <button type="button" class="iconoir-nav-arrow-right" id="open-chat"></button>
             </nav>
-            <button type="button" data-replaced="contacts swipe-down" data-line="down">Контакты</button>
+            <!--<button type="button" data-replaced="contacts swipe-down" data-line="down">Контакты</button>-->
         </form>
     </section>
     <section data-replaced="profile" hidden>
@@ -42,13 +53,12 @@
                         </nav>
                     </header>
                     <main>
-                        <h3 data-storage="avatar"></h3>
+                        <h3 data-storage="kaomoji"></h3>
                     </main>
                     <footer></footer>
                 </section>
                 <nav>
                     <button class="iconoir-fill-color" data-hue-adaptive="0"></button>
-                    <button class="iconoir-fill-color" data-hue-adaptive="20"></button>
                     <button class="iconoir-fill-color" data-hue-adaptive="60"></button>
                     <button class="iconoir-fill-color" data-hue-adaptive="120"></button>
                     <button class="iconoir-fill-color" data-hue-adaptive="180"></button>
