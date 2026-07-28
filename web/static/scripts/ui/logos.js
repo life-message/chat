@@ -1,5 +1,9 @@
 const originalSetItem = localStorage.setItem.bind(localStorage);
 
+if (!localStorage.getItem('color')) {
+  originalSetItem('color', '0');
+}
+
 localStorage.setItem = function (key, value) {
   originalSetItem(key, value);
   if (key === 'color') {
@@ -19,12 +23,12 @@ function showActiveLogo() {
   const color = parseInt(colorValue);
 
   const ranges = {
-    lime: { min: 0, max: 30 },
-    blueberry: { min: 31, max: 139 },
-    grape: { min: 140, max: 189 },
-    tomato: { min: 190, max: 239 },
-    carrot: { min: 240, max: 305 },
-    lemon: { min: 306, max: 360 },
+    blueberry: { min: 1, max: 1 },
+    grape: { min: 141, max: 142 },
+    tomato: { min: 191, max: 192 },
+    carrot: { min: 241, max: 242 },
+    lemon: { min: 306, max: 307 },
+    lime: { min: 0, max: 360 },
   };
 
   let activeName = '';
@@ -45,6 +49,8 @@ window.addEventListener('storage', (e) => {
     showActiveLogo();
   }
 });
+
+showActiveLogo();
 
 SPA(showActiveLogo, {
   id: 'logos',
