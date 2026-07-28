@@ -53,16 +53,14 @@ export class CallUI {
   _showPanel() {
     this._hidePanel();
     document.body.insertAdjacentHTML("beforeend", `
-      <aside id="call-panel" class="call-panel">
-        <header class="call-panel__head">
-          <span class="call-panel__dot"></span>
-          <span class="call-panel__title">Звонок</span>
-          <span id="call-count" class="call-panel__count">1</span>
+      <aside id="call-panel">
+        <header>
+          <span id="call-count">1</span>
         </header>
-        <div id="call-peers" class="call-panel__peers"></div>
-        <footer class="call-panel__controls">
-          <button id="call-mute" class="call-ctrl iconoir-microphone" title="Микрофон"></button>
-          <button id="call-leave" class="call-ctrl call-ctrl--leave iconoir-phone" title="Выйти"></button>
+        <div id="call-peers"></div>
+        <footer>
+          <button id="call-mute" class="iconoir-microphone" title="Микрофон"></button>
+          <button id="call-leave" class="iconoir-phone" title="Выйти"></button>
         </footer>
       </aside>
       <div id="call-audio" hidden></div>
