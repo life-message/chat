@@ -1,4 +1,5 @@
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, interactive-widget=resizes-content">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css"
         media="(prefers-color-scheme: light)">
     <link rel="stylesheet"
@@ -6,9 +7,11 @@
         media="(prefers-color-scheme: dark)">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
 
+
     <script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
     <script type="module" src="static/scripts/chat/chat.js"></script>
     <script type="module" src="static/scripts/ui/auto-fonts.js"></script>
+    <script type="module" src="static/scripts/share.js"></script>
     <link rel="stylesheet" href="static/css/chat.css">
 </head>
 
@@ -25,7 +28,11 @@
         <section id="message">
             <div id="users-none" hidden>
                 <h3>В чате никого нет</h3>
-                <button class="iconoir-share-android">Пригласить</button>
+                <nav>
+                    <button><a href="/" class="iconoir-nav-arrow-left"></a></button>
+                    <button id="share" type="button" class="iconoir-share-android">Пригласить</button>
+
+                </nav>
             </div>
             <div id="users-list" hidden>
             </div>

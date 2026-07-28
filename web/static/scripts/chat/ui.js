@@ -36,7 +36,7 @@ export class ChatUI {
       this.updateChatTitle("Группа");
     }
     if (userKeys.length === 1) {
-      this.updateChatTitle(usersObj[userKeys[0]].username);
+      this.updateChatTitle(usersObj[userKeys[0]].kaomoji);
     }
   }
 
@@ -58,7 +58,7 @@ export class ChatUI {
 
     this.userListEl.innerHTML = keys.map(uid => {
       const u = usersObj[uid]; // Достаем пользователя по ключу
-      return `<h4><span>${u.avatar ?? ''}</span> <span>${u.username ?? ''}</span></h4>`;
+      return `<h4><span>${u.kaomoji ?? ''}</span> <span>${u.username ?? ''}</span></h4>`;
     }).join('');
   }
 

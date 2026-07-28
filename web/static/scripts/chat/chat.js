@@ -21,7 +21,7 @@ function initChat() {
 
   function getCurrentUserData() {
     return {
-      avatar: localStorage.getItem("avatar"),
+      kaomoji: localStorage.getItem("kaomoji"),
       uid: localStorage.getItem("uid"),
       username: localStorage.getItem("username"),
     };
