@@ -1,11 +1,13 @@
 import { ChatWebSocket } from "./websocket.js";
 import { ChatUI } from "./ui.js";
 import { UsersManager } from "./users.js";
+import { CallUI } from "./calls/CallUI.js";
 
 let currentChat = null;
 
 function cleanupChat() {
   if (currentChat) {
+    currentChat.callUI?.destroy();   // ← добавить
     currentChat.close();
     currentChat.ui.clearTextarea?.();
     currentChat = null;
@@ -69,12 +71,16 @@ function initChat() {
   });
 
   ws.connect();
+  const callUI = new CallUI(ws, userData);
+
+
 
   return {
     close: () => ws.close(),
     ws,
     ui,
     usersManager,
+    callUI,                                  // ← добавить
   };
 }
 
