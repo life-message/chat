@@ -48,12 +48,6 @@ export class CallUI {
     m.onMuteChange = (uid, muted) => this._setMute(uid, muted);
   }
 
-  _bindButton() {
-    this.btn = document.getElementById("login-call");
-    this.btn.onclick = () =>
-      this.manager.inCall ? this.manager.leave() : this.manager.join();
-  }
-
   // ── Панель ────────────────────────────────────────────────────
 
   _showPanel() {
@@ -67,7 +61,7 @@ export class CallUI {
         </header>
         <div id="call-peers" class="call-panel__peers"></div>
         <footer class="call-panel__controls">
-          <button id="call-mute" class="call-ctrl iconoir-mic" title="Микрофон"></button>
+          <button id="call-mute" class="call-ctrl iconoir-microphone" title="Микрофон"></button>
           <button id="call-leave" class="call-ctrl call-ctrl--leave iconoir-phone" title="Выйти"></button>
         </footer>
       </aside>
