@@ -1,5 +1,3 @@
-import { SPA } from "https://cdn.jsdelivr.net/gh/live-message/cdn@0.3.1/js/utils/spa.js";
-
 function adjustFontSize(element) {
   if (!element) return;
 

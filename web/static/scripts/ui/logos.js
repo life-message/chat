@@ -1,5 +1,3 @@
-import { SPA } from "https://cdn.jsdelivr.net/gh/live-message/cdn@0.3.1/js/utils/spa.js";
-
 const originalSetItem = localStorage.setItem.bind(localStorage);
 
 localStorage.setItem = function (key, value) {
