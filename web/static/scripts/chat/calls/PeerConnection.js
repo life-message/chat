@@ -16,6 +16,22 @@ export class PeerConnection {
     this.pc.addTrack(track, stream);
   }
 
+  get glare() {
+    return this.pc.signalingState === "have-local-offer";
+  }
+
+  async rollback() {
+    await this.pc.setLocalDescription({ type: "rollback" });
+  }
+
+  createDataChannel(label, opts) {
+    return this.pc.createDataChannel(label, opts);
+  }
+
+  onDataChannel(cb) {
+    this.pc.ondatachannel = (e) => cb(e.channel);
+  }
+
   async createOffer() {
     const offer = await this.pc.createOffer();
     await this.pc.setLocalDescription(offer);

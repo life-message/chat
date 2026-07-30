@@ -79,7 +79,12 @@ export class CallManager {
 
   async _onOffer(m) {
     if (!this.inCall || m.targetUid !== this.uid) return;
-    const answer = await this._getPeer(m.uid).handleOffer(m.sdp);
+    const peer = this._getPeer(m.uid);
+    if (peer.glare) {
+      if (this.uid > m.uid) return;
+      await peer.rollback();
+    }
+    const answer = await peer.handleOffer(m.sdp);
     this.ws.send({ type: "call/answer", uid: this.uid, targetUid: m.uid, sdp: answer });
   }
 
