@@ -1,4 +1,12 @@
-const ICE = [{ urls: "stun:stun.l.google.com:19302" }];
+const ICE = [
+  { urls: "stun:stun.l.google.com:19302" },
+  {
+    urls: ["turn:turn.falbue.ru:3478", "turns:turn.falbue.ru:5349"],
+    username: "lime",
+    credential: "live-message",
+  },
+];
+
 
 export class PeerConnection {
   constructor(remoteUid, onIce, onTrack) {
