@@ -48,13 +48,22 @@ function initChat() {
       ws.send({ ...getCurrentUserData(), type: "users/welcome" });
     })
     .on("users/exit", (msg) => {
-      if (msg.uid === userData.uid) return;
-      if (msg.uid) {
-        usersManager.remove(msg.uid);
-      }
+      const oldUsers = usersManager.getList();
+      usersManager.clear()
+      ws.send({ ...getCurrentUserData(), type: "users/welcome" });
+      const newUsers = usersManager.getList();
+
+      // Преобразуем в массив объектов с данными пользователей
+      const removedUsers = Object.keys(oldUsers)
+        .filter(uid => !(uid in newUsers))
+        .map(uid => ({ ...oldUsers[uid], uid }));
+
+      console.log('Удаленные пользователи:', removedUsers);
+
       ui.displayDiv();
-      notification(`${msg.username} отключился`);
+      notification(`${removedUsers[0].username} отключился`);
     })
+
     .on("message", (msg) => {
       usersManager.update(msg);
       ui.updateMessage(`${msg.username}: ${msg.text}`, msg);
@@ -80,7 +89,7 @@ function initChat() {
     ws,
     ui,
     usersManager,
-    callUI,                                  // ← добавить
+    callUI,
   };
 }
 
