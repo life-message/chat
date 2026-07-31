@@ -20,6 +20,21 @@
         <header>
             <nav>
                 <h4 id="chat-title"></h4>
+                <aside id="call-panel" class="minimized">
+                    <header>
+                        <nav>
+                            <h4 class="iconoir-microphone"></h4>
+                            <h4 id="call-time">10:03</h4>
+                            <button id="call-enlarge"><span class="iconoir-enlarge"></span></button>
+                        </nav>
+                    </header>
+                    <div id="call-peers"></div>
+                    <footer>
+                        <button id="call-mute" class="iconoir-microphone" title="Микрофон"></button>
+                        <button id="call-leave" class="iconoir-phone" title="Выйти"></button>
+                    </footer>
+                </aside>
+                <div id="call-audio" hidden></div>
                 <nav>
                     <button id="login-call" class="iconoir-phone"></button>
                     <button class="iconoir-menu" menu="chat-menu"></button>
@@ -32,7 +47,6 @@
                 <nav>
                     <button><a href="/" class="iconoir-nav-arrow-left"></a></button>
                     <button id="share" type="button" class="iconoir-share-android">Пригласить</button>
-
                 </nav>
             </div>
             <div id="users-list" hidden>

@@ -16,6 +16,20 @@ export class PeerConnection {
     this.pc.addTrack(track, stream);
   }
 
+
+  async createOffer() {
+    const offer = await this.pc.createOffer();
+    await this.pc.setLocalDescription(offer);
+    return offer;
+  }
+
+  async handleOffer(offer) {
+    await this.pc.setRemoteDescription(offer);
+    const answer = await this.pc.createAnswer();
+    await this.pc.setLocalDescription(answer);
+    return answer;
+  }
+
   get glare() {
     return this.pc.signalingState === "have-local-offer";
   }
@@ -30,19 +44,6 @@ export class PeerConnection {
 
   onDataChannel(cb) {
     this.pc.ondatachannel = (e) => cb(e.channel);
-  }
-
-  async createOffer() {
-    const offer = await this.pc.createOffer();
-    await this.pc.setLocalDescription(offer);
-    return offer;
-  }
-
-  async handleOffer(offer) {
-    await this.pc.setRemoteDescription(offer);
-    const answer = await this.pc.createAnswer();
-    await this.pc.setLocalDescription(answer);
-    return answer;
   }
 
   async handleAnswer(answer) {

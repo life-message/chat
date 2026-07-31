@@ -1,103 +1,66 @@
-// calls/CallUI.js
-
 import { CallManager } from "./CallManager.js";
 
-/**
- * CallUI — UI-слой звонка.
- *
- * Инкапсулирует CallManager и отрисовку: панель участников,
- * кнопки управления, скрытые <audio> для удалённых потоков.
- *
- * Использование:
- *   import { CallUI } from "./calls/CallUI.js";
- *   new CallUI(chatWs, getCurrentUserData());   // chatWs — инстанс ChatWebSocket
- *
- * Точка входа — кнопка #login-call. Один клик — вход/создание,
- * повторный — выход. Кнопка ищется через SPA, поэтому работает
- * и после перерисовки DOM при навигации.
- */
 export class CallUI {
   constructor(ws, userData) {
     this.userData = userData;
     this.manager = new CallManager(ws, userData);
-    this.panel = null;
-    this.audioBox = null;
 
-    // DOM чата уже готов (его дождался внешний SPA на #message)
+    this.panel = document.getElementById("call-panel");
+    this.peersBox = document.getElementById("call-peers");
+    this.timeEl = document.getElementById("call-time");
+    this.muteBtn = document.getElementById("call-mute");
+    this.enlargeBtn = document.getElementById("call-enlarge");
+
     this.btn = document.getElementById("login-call");
-    if (this.btn)
-      this.btn.onclick = () =>
-        this.manager.inCall ? this.manager.leave() : this.manager.join();
+    if (this.btn) this.btn.onclick = () => (this.manager.inCall ? this.manager.leave() : this.manager.join());
+    this.muteBtn.onclick = () => this.manager.toggleMute();
+    document.getElementById("call-leave").onclick = () => this.manager.leave();
+    this.enlargeBtn.onclick = () => this._toggleEnlarge();
 
     this._wire();
   }
 
-  destroy() {
-    this.manager.leave();      // шлёт call/leave, закрывает пиры
-    this._hidePanel();
-    if (this.btn) this.btn.onclick = null;
-  }
-
   _wire() {
     const m = this.manager;
-    m.onSelfJoined = () => this._showPanel();
-    m.onSelfLeft = () => this._hidePanel();
+    m.onSelfJoined = () => this._show();
+    m.onSelfLeft = () => this._hide();
     m.onPeerJoined = (uid, user) => this._addCard(uid, user);
     m.onPeerLeft = (uid) => this._removeCard(uid);
-    m.onRemoteStream = (uid, stream) => this._addAudio(uid, stream);
-    m.onMuteChange = (uid, muted) => this._setMute(uid, muted);
+    m.onRemoteStream = (uid, s) => this._addAudio(uid, s);
+    m.onMuteChange = (uid, mut) => this._setMute(uid, mut);
   }
 
-  // ── Панель ────────────────────────────────────────────────────
-
-  _showPanel() {
-    this._hidePanel();
-    document.body.insertAdjacentHTML("beforeend", `
-      <aside id="call-panel">
-        <header>
-          <span id="call-count">1</span>
-        </header>
-        <div id="call-peers"></div>
-        <footer>
-          <button id="call-mute" class="iconoir-microphone" title="Микрофон"></button>
-          <button id="call-leave" class="iconoir-phone" title="Выйти"></button>
-        </footer>
-      </aside>
-      <div id="call-audio" hidden></div>
-    `);
-    this.panel = document.getElementById("call-panel");
-    this.audioBox = document.getElementById("call-audio");
-    document.getElementById("call-mute").onclick = () => this.manager.toggleMute();
-    document.getElementById("call-leave").onclick = () => this.manager.leave();
-
+  _show() {
+    this.peersBox.innerHTML = "";
     this._addCard(this.userData.uid, this.userData, true);
+    this.panel.hidden = false;
     this.btn?.classList.add("is-active");
+    this._startTimer();
   }
 
-  _hidePanel() {
-    this.panel?.remove();
-    this.audioBox?.remove();
-    this.panel = this.audioBox = null;
+  _hide() {
+    this._stopTimer();
+    this.panel.querySelectorAll("audio").forEach((a) => {
+      a.srcObject?.getTracks().forEach((t) => t.stop());
+      a.remove();
+    });
+    this.peersBox.innerHTML = "";
+    this.panel.hidden = true;
     this.btn?.classList.remove("is-active");
   }
 
-  // ── Участники ─────────────────────────────────────────────────
-
   _addCard(uid, user, self = false) {
-    document.getElementById("call-peers")?.insertAdjacentHTML("beforeend", `
-      <div class="call-card${self ? " call-card--self" : ""}" data-uid="${uid}">
-        <div class="call-card__avatar">${user.kaomoji || "(・ω・)"}</div>
-        <div class="call-card__name">${user.username}</div>
-        <span class="call-card__mute iconoir-mic-mute" hidden></span>
-      </div>
-    `);
-    this._updateCount();
+    this.peersBox.insertAdjacentHTML("beforeend",
+      `<div class="call-card${self ? " call-card--self" : ""}" data-uid="${uid}">
+         <p>${user.kaomoji}</p>
+         <span class="call-card__mute" hidden>🔇</span>
+       </div>`);
   }
 
   _removeCard(uid) {
-    document.querySelector(`.call-card[data-uid="${uid}"]`)?.remove();
-    this.audioBox?.querySelector(`audio[data-uid="${uid}"]`)?.remove();
-    this._updateCount();
+    this.peersBox.querySelector(`.call-card[data-uid="${uid}"]`)?.remove();
+    const a = this.panel.querySelector(`audio[data-uid="${uid}"]`);
+    if (a) { a.srcObject?.getTracks().forEach((t) => t.stop()); a.remove(); }
   }
 
   _addAudio(uid, stream) {
@@ -105,18 +68,43 @@ export class CallUI {
     a.srcObject = stream;
     a.dataset.uid = uid;
     a.autoplay = true;
-    this.audioBox?.append(a);
+    a.volume = this.manager.participants.get(uid).volume;
+    this.panel.append(a);
   }
 
   _setMute(uid, muted) {
-    const badge = document.querySelector(`.call-card[data-uid="${uid}"] .call-card__mute`);
+    const badge = this.peersBox.querySelector(`.call-card[data-uid="${uid}"] .call-card__mute`);
     if (badge) badge.hidden = !muted;
-    if (uid === this.userData.uid)
-      document.getElementById("call-mute")?.classList.toggle("is-muted", muted);
+    if (uid === this.userData.uid) this.muteBtn.classList.toggle("is-muted", muted);
   }
 
-  _updateCount() {
-    const c = document.getElementById("call-count");
-    if (c) c.textContent = document.querySelectorAll(".call-card").length;
+  // v: 0..1, по умолчанию 1 (100%). Кнопок пока нет — зови откуда угодно.
+  setVolume(uid, v) {
+    this.manager.participants.setVolume(uid, v);
+    const a = this.panel.querySelector(`audio[data-uid="${uid}"]`);
+    if (a) a.volume = v;
+  }
+
+  _startTimer() {
+    this._t0 = Date.now();
+    this._timer = setInterval(() => {
+      const s = Math.floor((Date.now() - this.manager.startedAt) / 1000);
+      this.timeEl.textContent = `${String((s / 60) | 0).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
+    }, 1000);
+  }
+
+  _stopTimer() {
+    clearInterval(this._timer);
+    this.timeEl.textContent = "00:00";
+  }
+
+  _toggleEnlarge() {
+    const min = this.panel.classList.toggle("minimized");
+    this.enlargeBtn.firstElementChild.className = min ? "iconoir-enlarge" : "iconoir-reduce";
+  }
+
+  destroy() {
+    this.manager.leave();
+    if (this.btn) this.btn.onclick = null;
   }
 }

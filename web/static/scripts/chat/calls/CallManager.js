@@ -1,25 +1,13 @@
 import { PeerConnection } from "./PeerConnection.js";
+import { CallParticipants } from "./CallParticipants.js";
 
-/**
- * CallManager — оркестратор mesh-звонка.
- *
- * Владеет Map<uid, PeerConnection>, локальным MediaStream и сигналингом.
- * Сам ничего не рисует — наружу торчат колбэки, UI подписывается на них.
- *
- * Колбэки (навешиваются как свойства):
- *   onSelfJoined()                  — локальный юзер вошёл
- *   onSelfLeft()                    — локальный юзер вышел
- *   onPeerJoined(uid, user)         — в звонке появился участник (user = сообщение call/join)
- *   onPeerLeft(uid)                 — участник вышел
- *   onRemoteStream(uid, stream)     — пришёл удалённый MediaStream (вешать на <audio>)
- *   onMuteChange(uid, muted)        — участник сменил мьют (включая себя)
- */
 export class CallManager {
   constructor(ws, userData) {
     this.ws = ws;
     this.userData = userData;
     this.uid = userData.uid;
     this.peers = new Map();
+    this.participants = new CallParticipants();
     this.localStream = null;
     this.inCall = false;
     this.muted = false;
@@ -34,14 +22,14 @@ export class CallManager {
     this._bind();
   }
 
-  // ── Публичное API ─────────────────────────────────────────────
-
   async join() {
     if (this.inCall) return;
     this.localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
     this.inCall = true;
+    this.participants.add(this.userData);
     this.ws.send({ type: "call/join", ...this.userData });
     this.onSelfJoined?.();
+    this.startedAt = Date.now();
   }
 
   leave() {
@@ -55,11 +43,10 @@ export class CallManager {
     if (!this.inCall) return;
     this.muted = !this.muted;
     this.localStream.getAudioTracks().forEach((t) => (t.enabled = !this.muted));
+    this.participants.setMuted(this.uid, this.muted);
     this.ws.send({ type: "call/mute", uid: this.uid, muted: this.muted });
     this.onMuteChange?.(this.uid, this.muted);
   }
-
-  // ── Сигналинг ─────────────────────────────────────────────────
 
   _bind() {
     this.ws.on("call/join", (m) => this._onJoin(m));
@@ -72,14 +59,24 @@ export class CallManager {
 
   async _onJoin(m) {
     if (!this.inCall || m.uid === this.uid) return;
+    this.participants.add(m);
     this.onPeerJoined?.(m.uid, m);
     const offer = await this._getPeer(m.uid).createOffer();
-    this.ws.send({ type: "call/offer", uid: this.uid, targetUid: m.uid, sdp: offer });
+    this.ws.send({
+      type: "call/offer",
+      ...this.userData,
+      targetUid: m.uid,
+      sdp: offer,
+      startedAt: this.startedAt,
+    });
   }
 
   async _onOffer(m) {
     if (!this.inCall || m.targetUid !== this.uid) return;
+    if (m.startedAt) this.startedAt = Math.min(this.startedAt, m.startedAt);
+    const isNew = !this.peers.has(m.uid);
     const peer = this._getPeer(m.uid);
+    if (isNew) this.onPeerJoined?.(m.uid, m);   // ← карточка старичка у новичка
     if (peer.glare) {
       if (this.uid > m.uid) return;
       await peer.rollback();
@@ -100,16 +97,16 @@ export class CallManager {
 
   _onLeave(m) {
     if (m.uid === this.uid) return;
+    this.participants.remove(m.uid);
     this._removePeer(m.uid);
     this.onPeerLeft?.(m.uid);
   }
 
   _onMute(m) {
     if (m.uid === this.uid) return;
+    this.participants.setMuted(m.uid, m.muted);
     this.onMuteChange?.(m.uid, m.muted);
   }
-
-  // ── Внутреннее ────────────────────────────────────────────────
 
   _getPeer(uid) {
     if (!this.peers.has(uid)) {
@@ -117,7 +114,10 @@ export class CallManager {
         uid,
         (remoteUid, candidate) =>
           this.ws.send({ type: "call/ice", uid: this.uid, targetUid: remoteUid, candidate }),
-        (remoteUid, stream) => this.onRemoteStream?.(remoteUid, stream)
+        (remoteUid, stream) => {
+          this.participants.setStream(remoteUid, stream);
+          this.onRemoteStream?.(remoteUid, stream);
+        }
       );
       this.localStream.getTracks().forEach((t) => peer.addTrack(t, this.localStream));
       this.peers.set(uid, peer);
@@ -132,6 +132,7 @@ export class CallManager {
 
   _teardown() {
     this.peers.forEach((_, uid) => this._removePeer(uid));
+    this.participants.clear();
     this.localStream?.getTracks().forEach((t) => t.stop());
     this.localStream = null;
     this.inCall = false;

@@ -1,21 +1,67 @@
 #call-panel {
+    box-sizing: border-box;
     position: fixed;
     bottom: 0;
     left: 0;
-    width: 30%;
-    height: 400px;
     background-color: var(--darkets);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    padding: calc(var(--padding)*2);
+    padding: calc(var(--padding));
     border-radius: var(--border-radius);
-    top: 16px;
+    top: 10px;
     left: 12px;
     right: 12px;
     margin-left: auto;
     margin-right: auto;
+    box-shadow: 0 6px 6px rgba(0 0 0 / 0.25);
+    max-height: 260px;
+    height: 260px;
+    max-width: 396px;
+    width: 396px;
+    overflow: hidden;
+    z-index: 100;
+    transition: height 0.3s ease,
+        width 0.3s ease,
+        box-shadow 0.3s ease;
+    container-type: size;
+    container-name: call-panel;
+    gap: var(--gap);
+}
+
+#call-panel.minimized {
+    height: 40px;
+    width: 200px;
+    box-shadow: none;
+}
+
+#call-panel>header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+#call-panel>#call-peers {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
+    gap: var(--gap);
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    max-height: 140px;
+
+}
+
+#call-panel>#call-peers ::-webkit-scrollbar {
+    width: 0px;
+    height: 0px;
 }
 
 #call-panel>footer {
@@ -23,4 +69,29 @@
     flex-direction: row;
     gap: var(--gap);
 
+}
+
+div[data-uid] {
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--gap);
+    padding: var(--padding);
+    border-radius: var(--border-radius);
+    background-color: var(--dark-muted);
+    width: 120px;
+    height: 120px;
+
+}
+
+div[data-uid]>* {
+    color: var(--accent);
+}
+
+@container call-panel (max-height: 50px) {
+    #call-panel>footer {
+        /*display: none;*/
+    }
 }
