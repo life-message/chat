@@ -11,7 +11,7 @@ function handleShareClick(event) {
   if (navigator.share) {
     navigator
       .share({
-        title: "life message",
+        title: "live message",
         text: "Приглашение в чат\n",
         url: window.location.href,
       })
