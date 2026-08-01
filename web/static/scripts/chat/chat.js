@@ -53,12 +53,9 @@ function initChat() {
       ws.send({ ...getCurrentUserData(), type: "users/welcome" });
       const newUsers = usersManager.getList();
 
-      // Преобразуем в массив объектов с данными пользователей
       const removedUsers = Object.keys(oldUsers)
         .filter(uid => !(uid in newUsers))
         .map(uid => ({ ...oldUsers[uid], uid }));
-
-      console.log('Удаленные пользователи:', removedUsers);
 
       ui.displayDiv();
       notification(`${removedUsers[0].username} отключился`);

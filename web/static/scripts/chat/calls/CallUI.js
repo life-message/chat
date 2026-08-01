@@ -16,6 +16,7 @@ export class CallUI {
     this.muteBtn.onclick = () => this.manager.toggleMute();
     document.getElementById("call-leave").onclick = () => this.manager.leave();
     this.enlargeBtn.onclick = () => this._toggleEnlarge();
+    this.timeEl.onclick = () => this._toggleEnlarge();
 
     this._wire();
   }

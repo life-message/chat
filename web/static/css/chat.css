@@ -22,8 +22,6 @@ main>header {
     box-sizing: border-box;
 
     top: 0px;
-    left: 12px;
-    right: 12px;
     margin-left: auto;
     margin-right: auto;
     border-radius: var(--border-radius) 0 0 var(--border-radius);
@@ -31,6 +29,7 @@ main>header {
 
     backdrop-filter: blur(2px);
     -webkit-backdrop-filter: blur(2px);
+    z-index: 1000;
 }
 
 main>header * {
