@@ -1,24 +1,37 @@
 {
-  "short_name": "Live Message",
+  "short_name": "lime",
   "name": "Live Message",
+  "description": "Анонимный мессенджер без истории сообщений",
+  "start_url": "/",
+  "id": "/",
+  "lang": "ru",
+  "dir": "ltr",
+  "background_color": "#99CC99",
+  "display": "standalone",
+  "scope": "/",
+  "prefer_related_applications": false,
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  },
+  "categories": [
+    "communication",
+    "social",
+    "productivity"
+  ],
   "icons": [
     {
       "src": "/static/icons/icon-192.png",
       "type": "image/png",
-      "sizes": "192x192"
+      "sizes": "192x192",
+      "purpose": "any maskable"
     },
     {
       "src": "/static/icons/icon-512.png",
       "type": "image/png",
-      "sizes": "512x512"
+      "sizes": "512x512",
+      "purpose": "any maskable"
     }
   ],
-  "start_url": "/",
-  "background_color": "#CDBCE2",
-  "display": "standalone",
-  "scope": "/",
-  "theme_color": "#000000",
-  "description": "Приватный мессенджер без истории сообщений",
   "screenshots": [
     {
       "src": "/static/icons/mobile.png",
@@ -29,7 +42,7 @@
     },
     {
       "src": "/static/icons/desktop.png",
-      "sizes": "1280x720",
+      "sizes": "1280x640",
       "type": "image/png",
       "form_factor": "wide",
       "label": "Десктопная версия чата"
