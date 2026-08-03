@@ -9,6 +9,7 @@ export class CallUI {
     this.peersBox = document.getElementById("call-peers");
     this.timeEl = document.getElementById("call-time");
     this.muteBtn = document.getElementById("call-mute");
+    this.microHeader = document.getElementById("call-mute-header");
     this.enlargeBtn = document.getElementById("call-enlarge");
 
     this.btn = document.getElementById("login-call");
@@ -35,7 +36,8 @@ export class CallUI {
     this.peersBox.innerHTML = "";
     this._addCard(this.userData.uid, this.userData, true);
     this.panel.hidden = false;
-    this.btn?.classList.add("is-active");
+    this.btn.classList.replace('iconoir-phone', 'iconoir-phone-disabled');
+    this.btn.classList.add('active');
     this._startTimer();
   }
 
@@ -47,19 +49,20 @@ export class CallUI {
     });
     this.peersBox.innerHTML = "";
     this.panel.hidden = true;
-    this.btn?.classList.remove("is-active");
+    this.btn.classList.replace('iconoir-phone-disabled', 'iconoir-phone');
+    this.btn.classList.remove('active');
   }
 
   _addCard(uid, user, self = false) {
     this.peersBox.insertAdjacentHTML("beforeend",
-      `<div class="call-card${self ? " call-card--self" : ""}" data-uid="${uid}">
+      `<div data-uid="${uid}">
          <p>${user.kaomoji}</p>
-         <span class="call-card__mute" hidden>🔇</span>
+         <span hidden>🔇</span>
        </div>`);
   }
 
   _removeCard(uid) {
-    this.peersBox.querySelector(`.call-card[data-uid="${uid}"]`)?.remove();
+    this.peersBox.querySelector(`[data-uid="${uid}"]`)?.remove();
     const a = this.panel.querySelector(`audio[data-uid="${uid}"]`);
     if (a) { a.srcObject?.getTracks().forEach((t) => t.stop()); a.remove(); }
   }
@@ -76,7 +79,12 @@ export class CallUI {
   _setMute(uid, muted) {
     const badge = this.peersBox.querySelector(`.call-card[data-uid="${uid}"] .call-card__mute`);
     if (badge) badge.hidden = !muted;
-    if (uid === this.userData.uid) this.muteBtn.classList.toggle("is-muted", muted);
+    if (uid === this.userData.uid) {
+      this.muteBtn.classList.remove('iconoir-microphone-mute-solid', 'iconoir-microphone');
+      this.microHeader.classList.remove('iconoir-microphone-mute-solid', 'iconoir-microphone');
+      this.muteBtn.classList.add(muted ? 'iconoir-microphone-mute-solid' : 'iconoir-microphone');
+      this.microHeader.classList.add(muted ? 'iconoir-microphone-mute-solid' : 'iconoir-microphone');
+    }
   }
 
   // v: 0..1, по умолчанию 1 (100%). Кнопок пока нет — зови откуда угодно.

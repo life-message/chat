@@ -149,3 +149,11 @@ div[data-uid]>* {
         position: none;
     }
 }
+
+button#call-leave,
+#login-call.active {
+    filter: hue-rotate(calc(-1 * var(--hue-offset, 0deg))) !important;
+    background-color: #EE5449 !important;
+    color: #802D27 !important;
+    box-shadow: inset 0 0 0 2px #802D27 !important;
+}
